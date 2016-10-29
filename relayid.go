@@ -138,8 +138,8 @@ func (obj *Pointer) Save(ctx context.Context) error {
 func (obj *PointerManager) GetPointerForTwitter(ctx context.Context, screenName string, userId string, oauthToken string) *Pointer {
 	return obj.GetPointerWithNew(ctx, screenName, userId, TypeTwitter, map[string]string{"token": oauthToken})
 }
-func (obj *PointerManager) GetPointerAsPointer(ctx context.Context, userName string) *Pointer {
-	return obj.GetPointerWithNew(ctx, userName, userName, TypePointer, map[string]string{})
+func (obj *PointerManager) GetPointerForRelayId(ctx context.Context, value string) *Pointer {
+	return obj.GetPointerWithNew(ctx, value, value, TypePointer, map[string]string{})
 }
 
 func (obj *PointerManager) NewPointer(ctx context.Context, screenName string, //
