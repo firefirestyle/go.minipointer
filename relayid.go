@@ -6,6 +6,7 @@ import (
 	"github.com/firefirestyle/go.miniprop"
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
 )
 
@@ -135,9 +136,11 @@ func (obj *Pointer) Save(ctx context.Context) error {
 	return err
 }
 
+/*
 func (obj *PointerManager) GetPointerForTwitter(ctx context.Context, screenName string, userId string, oauthToken string) *Pointer {
 	return obj.GetPointerWithNew(ctx, screenName, userId, TypeTwitter, map[string]string{"token": oauthToken})
 }
+*/
 func (obj *PointerManager) GetPointerForRelayId(ctx context.Context, value string) *Pointer {
 	return obj.GetPointerWithNew(ctx, value, value, TypePointer, map[string]string{})
 }
@@ -198,6 +201,7 @@ func (obj *PointerManager) GetPointer(ctx context.Context, identify string, iden
 }
 
 func (obj *PointerManager) GetPointerWithNew(ctx context.Context, screenName string, userId string, userIdType string, infos map[string]string) *Pointer {
+	Debug(ctx, ">>>>>>:userIdType:"+userIdType)
 	relayObj, err := obj.GetPointer(ctx, userId, userIdType)
 	if err != nil {
 		relayObj = obj.NewPointer(ctx, screenName, userId, userIdType, infos)
@@ -218,4 +222,8 @@ func (obj *PointerManager) NewPointerGaeKey(ctx context.Context, identify string
 
 func (obj *PointerManager) MakePointerStringId(identify string, identifyType string) string {
 	return obj.kind + ":" + obj.projectId + ":" + identifyType + ":" + identify
+}
+
+func Debug(ctx context.Context, message string) {
+	log.Infof(ctx, message)
 }
