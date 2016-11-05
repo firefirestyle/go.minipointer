@@ -17,7 +17,7 @@ const (
 )
 
 const (
-	TypeProjectId   = "ProjectId"
+	TypeRootGroup   = "RootGroup"
 	TypePointerName = "IdentifyName"
 	TypePointerId   = "IdentifyId"
 	TypePointerType = "PointerType"
@@ -28,7 +28,7 @@ const (
 )
 
 type GaePointerItem struct {
-	ProjectId   string
+	RootGroup   string
 	PointerName string
 	PointerId   string
 	PointerType string
@@ -40,7 +40,7 @@ type GaePointerItem struct {
 
 type PointerManagerConfig struct {
 	Kind      string
-	ProjectId string
+	RootGroup string
 }
 
 type Pointer struct {
@@ -51,19 +51,19 @@ type Pointer struct {
 
 type PointerManager struct {
 	kind      string
-	projectId string
+	rootGroup string
 }
 
 func NewPointerManager(config PointerManagerConfig) *PointerManager {
 	return &PointerManager{
 		kind:      config.Kind,
-		projectId: config.ProjectId,
+		rootGroup: config.RootGroup,
 	}
 }
 
 func (obj *Pointer) ToJson() []byte {
 	propObj := miniprop.NewMiniProp()
-	propObj.SetString(TypeProjectId, obj.gaeObj.ProjectId)
+	propObj.SetString(TypeRootGroup, obj.gaeObj.RootGroup)
 	propObj.SetString(TypePointerName, obj.gaeObj.PointerName)
 	propObj.SetString(TypePointerId, obj.gaeObj.PointerId)
 	propObj.SetString(TypeValue, obj.gaeObj.Value)
@@ -75,7 +75,7 @@ func (obj *Pointer) ToJson() []byte {
 
 func (obj *Pointer) SetValueFromJson(data []byte) {
 	propObj := miniprop.NewMiniPropFromJson(data)
-	obj.gaeObj.ProjectId = propObj.GetString(TypeProjectId, "")
+	obj.gaeObj.RootGroup = propObj.GetString(TypeRootGroup, "")
 	obj.gaeObj.PointerName = propObj.GetString(TypePointerName, "")
 	obj.gaeObj.PointerId = propObj.GetString(TypePointerId, "")
 	obj.gaeObj.Value = propObj.GetString(TypeValue, "")
@@ -152,7 +152,7 @@ func (obj *PointerManager) NewPointer(ctx context.Context, screenName string, //
 		PointerName: screenName,
 		PointerId:   userId,
 		PointerType: TypeTwitter,
-		ProjectId:   obj.projectId,
+		RootGroup:   obj.rootGroup,
 	}
 	propObj := miniprop.NewMiniPropFromJson([]byte(gaeObj.Info))
 	for k, v := range infos {
@@ -221,7 +221,7 @@ func (obj *PointerManager) NewPointerGaeKey(ctx context.Context, identify string
 }
 
 func (obj *PointerManager) MakePointerStringId(identify string, identifyType string) string {
-	return obj.kind + ":" + obj.projectId + ":" + identifyType + ":" + identify
+	return obj.kind + ":" + obj.rootGroup + ":" + identifyType + ":" + identify
 }
 
 func Debug(ctx context.Context, message string) {
