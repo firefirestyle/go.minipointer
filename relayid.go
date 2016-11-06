@@ -66,6 +66,8 @@ func (obj *Pointer) ToJson() []byte {
 	propObj.SetString(TypeRootGroup, obj.gaeObj.RootGroup)
 	propObj.SetString(TypePointerName, obj.gaeObj.PointerName)
 	propObj.SetString(TypePointerId, obj.gaeObj.PointerId)
+	propObj.SetString(TypePointerType, obj.gaeObj.PointerType)
+
 	propObj.SetString(TypeValue, obj.gaeObj.Value)
 	propObj.SetString(TypeInfo, obj.gaeObj.Info)
 	propObj.SetTime(TypeUpdate, obj.gaeObj.Update)
@@ -78,6 +80,7 @@ func (obj *Pointer) SetValueFromJson(data []byte) {
 	obj.gaeObj.RootGroup = propObj.GetString(TypeRootGroup, "")
 	obj.gaeObj.PointerName = propObj.GetString(TypePointerName, "")
 	obj.gaeObj.PointerId = propObj.GetString(TypePointerId, "")
+	obj.gaeObj.PointerType = propObj.GetString(TypePointerType, "")
 	obj.gaeObj.Value = propObj.GetString(TypeValue, "")
 	obj.gaeObj.Info = propObj.GetString(TypeInfo, "")
 	obj.gaeObj.Update = propObj.GetTime(TypeUpdate, time.Now())
@@ -137,10 +140,11 @@ func (obj *Pointer) Save(ctx context.Context) error {
 }
 
 func (obj *PointerManager) DeleteFromPointer(ctx context.Context, item *Pointer) error {
-	return datastore.Delete(ctx, obj.NewPointerGaeKey(ctx, item.GetId(), item.GetType()))
+	return obj.Delete(ctx, item.GetId(), item.GetType())
 }
 
 func (obj *PointerManager) Delete(ctx context.Context, userId, identifyType string) error {
+	//	Debug(ctx, ">> Pointer >>> : "+userId+" : "+identifyType+"==")
 	return datastore.Delete(ctx, obj.NewPointerGaeKey(ctx, userId, identifyType))
 }
 
