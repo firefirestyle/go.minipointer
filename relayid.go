@@ -136,6 +136,14 @@ func (obj *Pointer) Save(ctx context.Context) error {
 	return err
 }
 
+func (obj *PointerManager) DeleteFromPointer(ctx context.Context, item *Pointer) error {
+	return datastore.Delete(ctx, obj.NewPointerGaeKey(ctx, item.GetId(), item.GetType()))
+}
+
+func (obj *PointerManager) Delete(ctx context.Context, userId, identifyType string) error {
+	return datastore.Delete(ctx, obj.NewPointerGaeKey(ctx, userId, identifyType))
+}
+
 /*
 func (obj *PointerManager) GetPointerForTwitter(ctx context.Context, screenName string, userId string, oauthToken string) *Pointer {
 	return obj.GetPointerWithNew(ctx, screenName, userId, TypeTwitter, map[string]string{"token": oauthToken})
@@ -151,7 +159,7 @@ func (obj *PointerManager) NewPointer(ctx context.Context, screenName string, //
 	gaeObj := GaePointerItem{
 		PointerName: screenName,
 		PointerId:   userId,
-		PointerType: TypeTwitter,
+		PointerType: identifyType,
 		RootGroup:   obj.rootGroup,
 	}
 	propObj := miniprop.NewMiniPropFromJson([]byte(gaeObj.Info))
