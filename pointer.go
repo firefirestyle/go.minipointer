@@ -96,6 +96,7 @@ func (obj *Pointer) GetUpdate() time.Time {
 }
 
 func (obj *Pointer) Save(ctx context.Context) error {
+	Debug(ctx, "SAVE::"+string(obj.ToJson()))
 	_, err := datastore.Put(ctx, obj.gaeKey, obj.gaeObj)
 	if err == nil {
 		obj.UpdateMemcache(ctx)

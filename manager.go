@@ -83,11 +83,9 @@ func (obj *PointerManager) newCursorFromSrc(cursorSrc string) *datastore.Cursor 
 	}
 }
 
-func (obj *PointerManager) FindUserWithNewOrder(ctx context.Context, cursorSrc string, rootGroup, owner string) *FoundPointers {
+func (obj *PointerManager) FindFromOwner(ctx context.Context, cursorSrc string, owner string) *FoundPointers {
 	q := datastore.NewQuery(obj.kind)
-	if rootGroup != "" {
-		q = q.Filter("RootGroup =", obj.rootGroup)
-	}
+	q = q.Filter("RootGroup =", obj.rootGroup)
 	q = q.Filter("Owner = ", owner)
 	return obj.FindPointerFromQuery(ctx, q, cursorSrc)
 }
