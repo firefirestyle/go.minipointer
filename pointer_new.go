@@ -68,6 +68,7 @@ func (obj *PointerManager) GetPointer(ctx context.Context, identify string, iden
 	// db
 	err := datastore.Get(ctx, gaeKey, &gaeObj)
 	if err != nil {
+		Debug(ctx, "====> Failed to get pointer:"+identify+":"+identifyType)
 		return nil, err
 	}
 	ret := &Pointer{
