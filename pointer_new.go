@@ -6,138 +6,8 @@ import (
 	"github.com/firefirestyle/go.miniprop"
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
 )
-
-const (
-	TypeTwitter  = "twitter"
-	TypeFacebook = "facebook"
-	TypePointer  = "pointer"
-)
-
-const (
-	TypeRootGroup   = "RootGroup"
-	TypePointerName = "IdentifyName"
-	TypePointerId   = "IdentifyId"
-	TypePointerType = "PointerType"
-	TypeValue       = "UserName"
-	TypeInfo        = "Info"
-	TypeUpdate      = "Update"
-	TypeSign        = "Sign"
-)
-
-type GaePointerItem struct {
-	RootGroup   string
-	PointerName string
-	PointerId   string
-	PointerType string
-	Value       string
-	Info        string
-	Update      time.Time
-	Sign        string
-}
-
-type PointerManagerConfig struct {
-	Kind      string
-	RootGroup string
-}
-
-type Pointer struct {
-	gaeObj *GaePointerItem
-	gaeKey *datastore.Key
-	kind   string
-}
-
-type PointerManager struct {
-	kind      string
-	rootGroup string
-}
-
-func NewPointerManager(config PointerManagerConfig) *PointerManager {
-	return &PointerManager{
-		kind:      config.Kind,
-		rootGroup: config.RootGroup,
-	}
-}
-
-func (obj *Pointer) ToJson() []byte {
-	propObj := miniprop.NewMiniProp()
-	propObj.SetString(TypeRootGroup, obj.gaeObj.RootGroup)
-	propObj.SetString(TypePointerName, obj.gaeObj.PointerName)
-	propObj.SetString(TypePointerId, obj.gaeObj.PointerId)
-	propObj.SetString(TypePointerType, obj.gaeObj.PointerType)
-
-	propObj.SetString(TypeValue, obj.gaeObj.Value)
-	propObj.SetString(TypeInfo, obj.gaeObj.Info)
-	propObj.SetTime(TypeUpdate, obj.gaeObj.Update)
-	propObj.SetString(TypeSign, obj.gaeObj.Sign)
-	return propObj.ToJson()
-}
-
-func (obj *Pointer) SetValueFromJson(data []byte) {
-	propObj := miniprop.NewMiniPropFromJson(data)
-	obj.gaeObj.RootGroup = propObj.GetString(TypeRootGroup, "")
-	obj.gaeObj.PointerName = propObj.GetString(TypePointerName, "")
-	obj.gaeObj.PointerId = propObj.GetString(TypePointerId, "")
-	obj.gaeObj.PointerType = propObj.GetString(TypePointerType, "")
-	obj.gaeObj.Value = propObj.GetString(TypeValue, "")
-	obj.gaeObj.Info = propObj.GetString(TypeInfo, "")
-	obj.gaeObj.Update = propObj.GetTime(TypeUpdate, time.Now())
-	obj.gaeObj.Sign = propObj.GetString(TypeSign, "")
-}
-
-func (obj *Pointer) UpdateMemcache(ctx context.Context) {
-	userObjMemSource := obj.ToJson()
-	userObjMem := &memcache.Item{
-		Key:   obj.gaeKey.StringID(),
-		Value: []byte(userObjMemSource), //
-	}
-	memcache.Set(ctx, userObjMem)
-}
-
-func (obj *Pointer) GetName() string {
-	return obj.gaeObj.PointerName
-}
-
-func (obj *Pointer) GetId() string {
-	return obj.gaeObj.PointerId
-}
-func (obj *Pointer) GetType() string {
-	return obj.gaeObj.PointerType
-}
-
-func (obj *Pointer) GetValue() string {
-	return obj.gaeObj.Value
-}
-
-func (obj *Pointer) SetValue(v string) {
-	obj.gaeObj.Value = v
-}
-
-func (obj *Pointer) GetSign() string {
-	return obj.gaeObj.Sign
-}
-
-func (obj *Pointer) SetSign(v string) {
-	obj.gaeObj.Sign = v
-}
-
-func (obj *Pointer) GetInfo() string {
-	return obj.gaeObj.Info
-}
-
-func (obj *Pointer) GetUpdate() time.Time {
-	return obj.gaeObj.Update
-}
-
-func (obj *Pointer) Save(ctx context.Context) error {
-	_, err := datastore.Put(ctx, obj.gaeKey, obj.gaeObj)
-	if err == nil {
-		obj.UpdateMemcache(ctx)
-	}
-	return err
-}
 
 func (obj *PointerManager) DeleteFromPointer(ctx context.Context, item *Pointer) error {
 	return obj.Delete(ctx, item.GetId(), item.GetType())
@@ -148,11 +18,10 @@ func (obj *PointerManager) Delete(ctx context.Context, userId, identifyType stri
 	return datastore.Delete(ctx, obj.NewPointerGaeKey(ctx, userId, identifyType))
 }
 
-/*
 func (obj *PointerManager) GetPointerForTwitter(ctx context.Context, screenName string, userId string, oauthToken string) *Pointer {
 	return obj.GetPointerWithNew(ctx, screenName, userId, TypeTwitter, map[string]string{"token": oauthToken})
 }
-*/
+
 func (obj *PointerManager) GetPointerForRelayId(ctx context.Context, value string) *Pointer {
 	return obj.GetPointerWithNew(ctx, value, value, TypePointer, map[string]string{})
 }
@@ -234,8 +103,4 @@ func (obj *PointerManager) NewPointerGaeKey(ctx context.Context, identify string
 
 func (obj *PointerManager) MakePointerStringId(identify string, identifyType string) string {
 	return obj.kind + ":" + obj.rootGroup + ":" + identifyType + ":" + identify
-}
-
-func Debug(ctx context.Context, message string) {
-	log.Infof(ctx, message)
 }
