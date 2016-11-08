@@ -95,11 +95,16 @@ func (obj *Pointer) GetUpdate() time.Time {
 	return obj.gaeObj.Update
 }
 
-func (obj *Pointer) Save(ctx context.Context) error {
-	Debug(ctx, "SAVE::"+string(obj.ToJson()))
-	_, err := datastore.Put(ctx, obj.gaeKey, obj.gaeObj)
-	if err == nil {
-		obj.UpdateMemcache(ctx)
+func (obj *PointerManager) Save(ctx context.Context, pointer *Pointer) error {
+	if obj.memcachedOnly == true {
+		pointer.UpdateMemcache(ctx)
+		return nil
+	} else {
+		Debug(ctx, "SAVE::"+string(pointer.ToJson()))
+		_, err := datastore.Put(ctx, pointer.gaeKey, pointer.gaeObj)
+		if err == nil {
+			pointer.UpdateMemcache(ctx)
+		}
+		return err
 	}
-	return err
 }

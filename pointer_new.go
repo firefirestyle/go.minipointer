@@ -3,6 +3,8 @@ package minipointer
 import (
 	"time"
 
+	"errors"
+
 	"github.com/firefirestyle/go.miniprop"
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
@@ -63,6 +65,9 @@ func (obj *PointerManager) GetPointer(ctx context.Context, identify string, iden
 		}
 		ret.SetValueFromJson(memItemObj.Value)
 		return ret, nil
+	}
+	if obj.memcachedOnly == true {
+		return nil, errors.New("Failed to get pointer asis Memcached Only")
 	}
 	//
 	// db
