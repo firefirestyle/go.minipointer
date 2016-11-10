@@ -88,7 +88,7 @@ func (obj *PointerManager) GetPointer(ctx context.Context, identify string, iden
 }
 
 func (obj *PointerManager) GetPointerWithNew(ctx context.Context, screenName string, userId string, userIdType string, infos map[string]string) *Pointer {
-	Debug(ctx, ">>>>>>:userIdType:"+userIdType)
+	// Debug(ctx, ">>>>>>:userIdType:"+userIdType)
 	relayObj, err := obj.GetPointer(ctx, userId, userIdType)
 	if err != nil {
 		relayObj = obj.NewPointer(ctx, screenName, userId, userIdType, infos)
@@ -104,7 +104,6 @@ func (obj *PointerManager) GetPointerWithNew(ctx context.Context, screenName str
 }
 
 func (obj *PointerManager) NewPointerGaeKey(ctx context.Context, identify string, identifyType string) *datastore.Key {
-
 	return datastore.NewKey(ctx, obj.kind, obj.MakePointerStringId(identify, identifyType), 0, nil)
 }
 
