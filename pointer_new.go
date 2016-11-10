@@ -18,23 +18,6 @@ type PointerKeyInfo struct {
 	RootGroup    string
 }
 
-func (obj *PointerManager) DeleteFromPointer(ctx context.Context, item *Pointer) error {
-	return obj.Delete(ctx, item.GetId(), item.GetType())
-}
-
-func (obj *PointerManager) Delete(ctx context.Context, userId, identifyType string) error {
-	//	Debug(ctx, ">> Pointer >>> : "+userId+" : "+identifyType+"==")
-	return datastore.Delete(ctx, obj.NewPointerGaeKey(ctx, userId, identifyType))
-}
-
-func (obj *PointerManager) GetPointerWithNewForTwitter(ctx context.Context, screenName string, userId string, oauthToken string) *Pointer {
-	return obj.GetPointerWithNew(ctx, screenName, userId, TypeTwitter, map[string]string{"token": oauthToken})
-}
-
-func (obj *PointerManager) GetPointerWithNewForRelayId(ctx context.Context, value string) *Pointer {
-	return obj.GetPointerWithNew(ctx, value, value, TypePointer, map[string]string{})
-}
-
 func (obj *PointerManager) NewPointer(ctx context.Context, screenName string, //
 	userId string, identifyType string, infos map[string]string) *Pointer {
 	gaeKey := obj.NewPointerGaeKey(ctx, userId, identifyType)
@@ -55,6 +38,51 @@ func (obj *PointerManager) NewPointer(ctx context.Context, screenName string, //
 		gaeKey: gaeKey,
 		kind:   obj.kind,
 	}
+}
+
+func (obj *PointerManager) NewPointerGaeKey(ctx context.Context, identify string, identifyType string) *datastore.Key {
+	return datastore.NewKey(ctx, obj.kind, obj.MakePointerStringId(identify, identifyType), 0, nil)
+}
+
+func (obj *PointerManager) MakePointerStringId(identify string, identifyType string) string {
+	prop := miniprop.NewMiniProp()
+	prop.SetString("k", obj.kind)
+	prop.SetString("g", obj.rootGroup)
+	prop.SetString("i", identify)
+	prop.SetString("t", identifyType)
+	return string(prop.ToJson())
+}
+
+func (obj *PointerManager) GetKeyInfoFromStringId(stringId string) PointerKeyInfo {
+	prop := miniprop.NewMiniPropFromJson([]byte(stringId))
+	return PointerKeyInfo{
+		Kind:         prop.GetString("k", ""),
+		RootGroup:    prop.GetString("g", ""),
+		Identify:     prop.GetString("i", ""),
+		IdentifyType: prop.GetString("t", ""),
+	}
+}
+
+//
+//
+func (obj *PointerManager) DeleteFromPointer(ctx context.Context, item *Pointer) error {
+	return obj.Delete(ctx, item.GetId(), item.GetType())
+}
+
+func (obj *PointerManager) Delete(ctx context.Context, userId, identifyType string) error {
+	//	Debug(ctx, ">> Pointer >>> : "+userId+" : "+identifyType+"==")
+	return datastore.Delete(ctx, obj.NewPointerGaeKey(ctx, userId, identifyType))
+}
+
+//
+//
+//
+func (obj *PointerManager) GetPointerWithNewForTwitter(ctx context.Context, screenName string, userId string, oauthToken string) *Pointer {
+	return obj.GetPointerWithNew(ctx, screenName, userId, TypeTwitter, map[string]string{"token": oauthToken})
+}
+
+func (obj *PointerManager) GetPointerWithNewForRelayId(ctx context.Context, value string) *Pointer {
+	return obj.GetPointerWithNew(ctx, value, value, TypePointer, map[string]string{})
 }
 
 func (obj *PointerManager) GetPointer(ctx context.Context, identify string, identifyType string) (*Pointer, error) {
@@ -108,27 +136,4 @@ func (obj *PointerManager) GetPointerWithNew(ctx context.Context, screenName str
 	relayObj.gaeObj.Info = string(propObj.ToJson())
 	relayObj.gaeObj.Update = time.Now()
 	return relayObj
-}
-
-func (obj *PointerManager) NewPointerGaeKey(ctx context.Context, identify string, identifyType string) *datastore.Key {
-	return datastore.NewKey(ctx, obj.kind, obj.MakePointerStringId(identify, identifyType), 0, nil)
-}
-
-func (obj *PointerManager) MakePointerStringId(identify string, identifyType string) string {
-	prop := miniprop.NewMiniProp()
-	prop.SetString("k", obj.kind)
-	prop.SetString("g", obj.rootGroup)
-	prop.SetString("i", identify)
-	prop.SetString("t", identifyType)
-	return string(prop.ToJson())
-}
-
-func (obj *PointerManager) GetKeyInfoFromStringId(stringId string) PointerKeyInfo {
-	prop := miniprop.NewMiniPropFromJson([]byte(stringId))
-	return PointerKeyInfo{
-		Kind:         prop.GetString("k", ""),
-		RootGroup:    prop.GetString("g", ""),
-		Identify:     prop.GetString("i", ""),
-		IdentifyType: prop.GetString("t", ""),
-	}
 }
