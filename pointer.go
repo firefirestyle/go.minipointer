@@ -9,15 +9,15 @@ import (
 )
 
 const (
-	TypeRootGroup   = "RootGroup"
-	TypePointerName = "IdentifyName"
-	TypePointerId   = "IdentifyId"
-	TypePointerType = "PointerType"
-	TypeValue       = "UserName"
-	TypeInfo        = "Info"
-	TypeUpdate      = "Update"
-	TypeSign        = "Sign"
-	TypeOwner       = "Owner"
+	PropNameRootGroup   = "RootGroup"
+	PropNamePointerName = "IdentifyName"
+	PropNamePointerId   = "IdentifyId"
+	PropNamePointerType = "PointerType"
+	PropNameValue       = "UserName"
+	PropNameInfo        = "Info"
+	PropNameUpdate      = "Update"
+	PropNameSign        = "Sign"
+	PropNameOwner       = "Owner"
 )
 
 type GaePointerItem struct {
