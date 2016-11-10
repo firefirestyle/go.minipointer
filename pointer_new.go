@@ -65,11 +65,11 @@ func (obj *PointerManager) GetKeyInfoFromStringId(stringId string) PointerKeyInf
 
 //
 //
-func (obj *PointerManager) DeleteFromPointer(ctx context.Context, item *Pointer) error {
-	return obj.Delete(ctx, item.GetId(), item.GetType())
+func (obj *PointerManager) DeletePointerFromObj(ctx context.Context, item *Pointer) error {
+	return obj.DeletePointer(ctx, item.GetId(), item.GetType())
 }
 
-func (obj *PointerManager) Delete(ctx context.Context, userId, identifyType string) error {
+func (obj *PointerManager) DeletePointer(ctx context.Context, userId, identifyType string) error {
 	//	Debug(ctx, ">> Pointer >>> : "+userId+" : "+identifyType+"==")
 	gaeKey := obj.NewPointerGaeKey(ctx, userId, identifyType)
 	ret := datastore.Delete(ctx, gaeKey)
