@@ -27,11 +27,11 @@ func (obj *PointerManager) Delete(ctx context.Context, userId, identifyType stri
 	return datastore.Delete(ctx, obj.NewPointerGaeKey(ctx, userId, identifyType))
 }
 
-func (obj *PointerManager) GetPointerForTwitter(ctx context.Context, screenName string, userId string, oauthToken string) *Pointer {
+func (obj *PointerManager) GetPointerWithNewForTwitter(ctx context.Context, screenName string, userId string, oauthToken string) *Pointer {
 	return obj.GetPointerWithNew(ctx, screenName, userId, TypeTwitter, map[string]string{"token": oauthToken})
 }
 
-func (obj *PointerManager) GetPointerForRelayId(ctx context.Context, value string) *Pointer {
+func (obj *PointerManager) GetPointerWithNewForRelayId(ctx context.Context, value string) *Pointer {
 	return obj.GetPointerWithNew(ctx, value, value, TypePointer, map[string]string{})
 }
 
