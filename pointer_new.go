@@ -71,7 +71,10 @@ func (obj *PointerManager) DeleteFromPointer(ctx context.Context, item *Pointer)
 
 func (obj *PointerManager) Delete(ctx context.Context, userId, identifyType string) error {
 	//	Debug(ctx, ">> Pointer >>> : "+userId+" : "+identifyType+"==")
-	return datastore.Delete(ctx, obj.NewPointerGaeKey(ctx, userId, identifyType))
+	gaeKey := obj.NewPointerGaeKey(ctx, userId, identifyType)
+	ret := datastore.Delete(ctx, gaeKey)
+	obj.DeleteMemcache(ctx, gaeKey.StringID())
+	return ret
 }
 
 //
