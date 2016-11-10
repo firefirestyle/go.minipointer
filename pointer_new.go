@@ -11,6 +11,13 @@ import (
 	"google.golang.org/appengine/memcache"
 )
 
+type PointerKeyInfo struct {
+	IdentifyType string
+	Identify     string
+	Kind         string
+	RootGroup    string
+}
+
 func (obj *PointerManager) DeleteFromPointer(ctx context.Context, item *Pointer) error {
 	return obj.Delete(ctx, item.GetId(), item.GetType())
 }
@@ -114,13 +121,6 @@ func (obj *PointerManager) MakePointerStringId(identify string, identifyType str
 	prop.SetString("i", identify)
 	prop.SetString("t", identifyType)
 	return string(prop.ToJson())
-}
-
-type PointerKeyInfo struct {
-	IdentifyType string
-	Identify     string
-	Kind         string
-	RootGroup    string
 }
 
 func (obj *PointerManager) GetKeyInfoFromStringId(stringId string) PointerKeyInfo {
