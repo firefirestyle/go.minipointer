@@ -9,7 +9,6 @@ import (
 func (obj *Pointer) ToJson() []byte {
 	propObj := miniprop.NewMiniProp()
 	propObj.SetString(PropNameRootGroup, obj.gaeObj.RootGroup)
-	propObj.SetString(PropNamePointerName, obj.gaeObj.PointerName)
 	propObj.SetString(PropNamePointerId, obj.gaeObj.PointerId)
 	propObj.SetString(PropNamePointerType, obj.gaeObj.PointerType)
 	propObj.SetString(PropNameOwner, obj.gaeObj.Owner)
@@ -24,7 +23,6 @@ func (obj *Pointer) ToJson() []byte {
 func (obj *Pointer) SetValueFromJson(data []byte) {
 	propObj := miniprop.NewMiniPropFromJson(data)
 	obj.gaeObj.RootGroup = propObj.GetString(PropNameRootGroup, "")
-	obj.gaeObj.PointerName = propObj.GetString(PropNamePointerName, "")
 	obj.gaeObj.PointerId = propObj.GetString(PropNamePointerId, "")
 	obj.gaeObj.PointerType = propObj.GetString(PropNamePointerType, "")
 	obj.gaeObj.Owner = propObj.GetString(PropNameOwner, "")

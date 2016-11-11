@@ -18,11 +18,11 @@ type PointerKeyInfo struct {
 	RootGroup    string
 }
 
-func (obj *PointerManager) NewPointer(ctx context.Context, screenName string, //
+func (obj *PointerManager) NewPointer(ctx context.Context, //screenName string, //
 	userId string, identifyType string, infos map[string]string) *Pointer {
 	gaeKey := obj.NewPointerGaeKey(ctx, userId, identifyType)
 	gaeObj := GaePointerItem{
-		PointerName: screenName,
+		//		PointerName: screenName,
 		PointerId:   userId,
 		PointerType: identifyType,
 		RootGroup:   obj.rootGroup,

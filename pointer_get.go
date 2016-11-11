@@ -15,11 +15,13 @@ import (
 //
 //
 func (obj *PointerManager) GetPointerWithNewForTwitter(ctx context.Context, screenName string, userId string, oauthToken string) *Pointer {
-	return obj.GetPointerWithNew(ctx, screenName, userId, TypeTwitter, map[string]string{"token": oauthToken})
+	return obj.GetPointerWithNew(ctx, //screenName,
+		userId, TypeTwitter, map[string]string{"token": oauthToken})
 }
 
 func (obj *PointerManager) GetPointerWithNewForRelayId(ctx context.Context, value string) *Pointer {
-	return obj.GetPointerWithNew(ctx, value, value, TypePointer, map[string]string{})
+	return obj.GetPointerWithNew(ctx, // value,
+		value, TypePointer, map[string]string{})
 }
 
 func (obj *PointerManager) GetPointer(ctx context.Context, identify string, identifyType string) (*Pointer, error) {
@@ -59,11 +61,13 @@ func (obj *PointerManager) GetPointer(ctx context.Context, identify string, iden
 	return ret, nil
 }
 
-func (obj *PointerManager) GetPointerWithNew(ctx context.Context, screenName string, userId string, userIdType string, infos map[string]string) *Pointer {
+func (obj *PointerManager) GetPointerWithNew(ctx context.Context, // screenName string,
+	identity string, identityType string, infos map[string]string) *Pointer {
 	// Debug(ctx, ">>>>>>:userIdType:"+userIdType)
-	relayObj, err := obj.GetPointer(ctx, userId, userIdType)
+	relayObj, err := obj.GetPointer(ctx, identity, identityType)
 	if err != nil {
-		relayObj = obj.NewPointer(ctx, screenName, userId, userIdType, infos)
+		relayObj = obj.NewPointer(ctx, //screenName,
+			identity, identityType, infos)
 	}
 	//
 	propObj := miniprop.NewMiniPropFromJson([]byte(relayObj.gaeObj.Info))

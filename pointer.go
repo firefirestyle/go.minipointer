@@ -22,7 +22,6 @@ const (
 
 type GaePointerItem struct {
 	RootGroup   string
-	PointerName string
 	PointerId   string
 	PointerType string
 	Value       string
@@ -48,10 +47,6 @@ func (obj *Pointer) UpdateMemcache(ctx context.Context) {
 }
 func (obj *PointerManager) DeleteMemcache(ctx context.Context, stringId string) {
 	memcache.Delete(ctx, stringId)
-}
-
-func (obj *Pointer) GetName() string {
-	return obj.gaeObj.PointerName
 }
 
 func (obj *Pointer) GetId() string {
