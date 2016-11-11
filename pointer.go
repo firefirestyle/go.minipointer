@@ -46,6 +46,7 @@ func (obj *Pointer) UpdateMemcache(ctx context.Context) {
 	}
 	memcache.Set(ctx, userObjMem)
 }
+
 func (obj *PointerManager) DeleteMemcache(ctx context.Context, stringId string) {
 	memcache.Delete(ctx, stringId)
 }
