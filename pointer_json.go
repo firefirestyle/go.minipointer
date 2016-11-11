@@ -12,6 +12,7 @@ func (obj *Pointer) ToJson() []byte {
 	propObj.SetString(PropNamePointerId, obj.gaeObj.PointerId)
 	propObj.SetString(PropNamePointerType, obj.gaeObj.PointerType)
 	propObj.SetString(PropNameOwner, obj.gaeObj.Owner)
+	propObj.SetInt(PropNamePoint, obj.gaeObj.Point)
 
 	propObj.SetString(PropNameValue, obj.gaeObj.Value)
 	propObj.SetString(PropNameInfo, obj.gaeObj.Info)
@@ -27,6 +28,7 @@ func (obj *Pointer) SetValueFromJson(data []byte) {
 	obj.gaeObj.PointerType = propObj.GetString(PropNamePointerType, "")
 	obj.gaeObj.Owner = propObj.GetString(PropNameOwner, "")
 	obj.gaeObj.Value = propObj.GetString(PropNameValue, "")
+	obj.gaeObj.Point = propObj.GetInt(PropNamePoint, 0)
 	obj.gaeObj.Info = propObj.GetString(PropNameInfo, "")
 	obj.gaeObj.Update = propObj.GetTime(PropNameUpdate, time.Now())
 	obj.gaeObj.Sign = propObj.GetString(PropNameSign, "")

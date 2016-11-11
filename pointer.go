@@ -10,7 +10,6 @@ import (
 
 const (
 	PropNameRootGroup   = "RootGroup"
-	PropNamePointerName = "IdentifyName"
 	PropNamePointerId   = "IdentifyId"
 	PropNamePointerType = "PointerType"
 	PropNameValue       = "UserName"
@@ -18,6 +17,7 @@ const (
 	PropNameUpdate      = "Update"
 	PropNameSign        = "Sign"
 	PropNameOwner       = "Owner"
+	PropNamePoint       = "Point"
 )
 
 type GaePointerItem struct {
@@ -29,6 +29,7 @@ type GaePointerItem struct {
 	Update      time.Time
 	Owner       string
 	Sign        string
+	Point       int
 }
 
 type Pointer struct {
@@ -78,6 +79,14 @@ func (obj *Pointer) GetOwner() string {
 
 func (obj *Pointer) SetOwner(v string) {
 	obj.gaeObj.Owner = v
+}
+
+func (obj *Pointer) GetPoint() int {
+	return obj.gaeObj.Point
+}
+
+func (obj *Pointer) SetPoint(v int) {
+	obj.gaeObj.Point = v
 }
 
 func (obj *Pointer) GetInfo() string {
