@@ -14,8 +14,8 @@ import (
 type PointerKeyInfo struct {
 	IdentifyType string
 	Identify     string
-	Kind         string
-	RootGroup    string
+	//Kind         string
+	RootGroup string
 }
 
 func (obj *PointerManager) NewPointer(ctx context.Context, //screenName string, //
@@ -46,7 +46,7 @@ func (obj *PointerManager) NewPointerGaeKey(ctx context.Context, identify string
 
 func (obj *PointerManager) MakePointerStringId(identify string, identifyType string) string {
 	prop := miniprop.NewMiniProp()
-	prop.SetString("k", obj.kind)
+	//prop.SetString("k", obj.kind)
 	prop.SetString("g", obj.rootGroup)
 	prop.SetString("i", identify)
 	prop.SetString("t", identifyType)
@@ -56,7 +56,7 @@ func (obj *PointerManager) MakePointerStringId(identify string, identifyType str
 func (obj *PointerManager) GetKeyInfoFromStringId(stringId string) PointerKeyInfo {
 	prop := miniprop.NewMiniPropFromJson([]byte(stringId))
 	return PointerKeyInfo{
-		Kind:         prop.GetString("k", ""),
+		//Kind:         prop.GetString("k", ""),
 		RootGroup:    prop.GetString("g", ""),
 		Identify:     prop.GetString("i", ""),
 		IdentifyType: prop.GetString("t", ""),
