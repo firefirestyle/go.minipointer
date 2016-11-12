@@ -42,6 +42,15 @@ func (obj *PointerManager) NewQueryFromOwner(owner string) *datastore.Query {
 	return q
 }
 
+func (obj *PointerManager) NewQueryFromOwnerAndRootGroup(owner, rootGroup string) *datastore.Query {
+	q := datastore.NewQuery(obj.kind)
+	if rootGroup != "" {
+		q = q.Filter("RootGroup =", rootGroup)
+	}
+	q = q.Filter("Owner = ", owner)
+	return q
+}
+
 func (obj *PointerManager) NewQueryFromPointerId(v string) *datastore.Query {
 	q := datastore.NewQuery(obj.kind)
 	q = q.Filter("RootGroup =", obj.rootGroup)
