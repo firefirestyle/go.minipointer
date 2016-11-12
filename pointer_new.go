@@ -41,7 +41,11 @@ func (obj *PointerManager) NewPointer(ctx context.Context, //screenName string, 
 }
 
 func (obj *PointerManager) NewPointerGaeKey(ctx context.Context, identify string, identifyType string) *datastore.Key {
-	return datastore.NewKey(ctx, obj.kind, obj.MakePointerStringId(identify, identifyType), 0, nil)
+	return obj.NewPointerGaeKeyFromStringId(ctx, obj.MakePointerStringId(identify, identifyType))
+}
+
+func (obj *PointerManager) NewPointerGaeKeyFromStringId(ctx context.Context, stringId string) *datastore.Key {
+	return datastore.NewKey(ctx, obj.kind, stringId, 0, nil)
 }
 
 func (obj *PointerManager) MakePointerStringId(identify string, identifyType string) string {
@@ -70,8 +74,14 @@ func (obj *PointerManager) DeletePointerFromObj(ctx context.Context, item *Point
 }
 
 func (obj *PointerManager) DeletePointer(ctx context.Context, userId, identifyType string) error {
-	//	Debug(ctx, ">> Pointer >>> : "+userId+" : "+identifyType+"==")
 	gaeKey := obj.NewPointerGaeKey(ctx, userId, identifyType)
+	ret := datastore.Delete(ctx, gaeKey)
+	obj.DeleteMemcache(ctx, gaeKey.StringID())
+	return ret
+}
+
+func (obj *PointerManager) DeletePointerFromStringId(ctx context.Context, stringId string) error {
+	gaeKey := obj.NewPointerGaeKeyFromStringId(ctx, stringId)
 	ret := datastore.Delete(ctx, gaeKey)
 	obj.DeleteMemcache(ctx, gaeKey.StringID())
 	return ret
