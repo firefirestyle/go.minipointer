@@ -48,7 +48,7 @@ func (obj *PointerManager) GetPointer(ctx context.Context, identify string, iden
 	err := datastore.Get(ctx, gaeKey, &gaeObj)
 	if err != nil {
 		Debug(ctx, "====> Failed to get pointer:"+identify+":"+identifyType)
-		return nil, err
+		return nil, errors.New(err.Error() + ":" + obj.kind + ":" + obj.MakePointerStringId(identify, identifyType))
 	}
 	ret := &Pointer{
 		gaeObj: &gaeObj,
