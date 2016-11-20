@@ -58,7 +58,7 @@ func (obj *PointerManager) NewQueryFromPointerId(v string) *datastore.Query {
 	return q
 }
 
-func (obj *PointerManager) FindBlobItemFromQueryAll(ctx context.Context, q *datastore.Query) FoundPointers {
+func (obj *PointerManager) FindPointerFromQueryAll(ctx context.Context, q *datastore.Query) FoundPointers {
 	founded := obj.FindPointerFromQuery(ctx, q, "")
 	oneCursor := founded.CursorOne
 	nextCursor := founded.CursorNext
